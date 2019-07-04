@@ -35,7 +35,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['site' => $site, 'token' => $token],
             'body' => $urls
         ]);
@@ -58,7 +58,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'update', [
+        return $client->post('update', [
             'query' => ['site' => $site, 'token' => $token],
             'body' => $urls
         ]);
@@ -81,7 +81,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'del', [
+        return $client->post('del', [
             'query' => ['site' => $site, 'token' => $token],
             'body' => $urls
         ]);
@@ -104,7 +104,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['site' => $site, 'token' => $token, 'type' => 'mip'],
             'body' => $urls
         ]);
@@ -127,7 +127,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['site' => $site, 'token' => $token, 'type' => 'amp'],
             'body' => $urls
         ]);
@@ -167,7 +167,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['appid' => $appId, 'token' => $token, 'type' => 'batch'],
             'body' => $urls
         ]);
@@ -190,7 +190,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['appid' => $appid, 'token' => $token, 'type' => 'batch'],
             'body' => $urls
         ]);
