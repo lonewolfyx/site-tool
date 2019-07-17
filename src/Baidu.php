@@ -271,4 +271,31 @@ class Baidu
         }
         return 0;
     }
+
+
+    /**
+     * 爱站百度权重
+     * @param string $domain
+     * @return int|string
+     */
+    public static function AZMBR($domain)
+    {
+        $url = "https://baidurank.aizhan.com/api/mbr?domain={$domain}&style=text";
+        $client = new HttpProClient();
+        $client->setHttpOptions([
+            'http_errors' => false,
+        ]);
+        $client->setBaseUri($url);
+        /** @var HttpResponse $response */
+        $response = $client->get('', [], [
+            'Referer' => 'http://' . $domain,
+            'User-Agent' => 'Mozilla/5.0 (compatible; Baiduspider/2.0;+http://www.baidu.com/search/spider.html）'
+        ]);
+        if ($response->isOk()) {
+            if (preg_match('/>(.*)<\/a>/U', $response->getContent(), $match)) {
+                return intval($match [1]);
+            }
+        }
+        return 0;
+    }
 }

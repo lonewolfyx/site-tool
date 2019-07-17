@@ -68,6 +68,22 @@ class Site
     }
 
     /**
+     * 获取网站缩略图
+     * @param string $url
+     * @return array
+     * @doc https://blinky.nemui.org/
+     */
+    public static function getShot($url)
+    {
+        return [
+            '64' => 'https://blinky.nemui.org/shot/small?' . $url,
+            '128' => 'https://blinky.nemui.org/shot?' . $url,
+            '256' => 'https://blinky.nemui.org/shot/large?' . $url,
+            '512' => 'https://blinky.nemui.org/shot/xlarge?' . $url,
+        ];
+    }
+
+    /**
      * 获取 Header
      * @param string $url
      * @return string
