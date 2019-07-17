@@ -25,7 +25,8 @@
         "ext-libxml": "*",
         "ext-intl": "*",
         "ext-ctype": "*",
-        "larva/supports": "^1.2"
+        "larva/supports": "^1.2",
+        "jeremykendall/php-domain-parser": "^5.4"
     },
     "autoload": {
         "psr-4": {

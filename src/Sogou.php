@@ -20,21 +20,20 @@ class Sogou
     /**
      * 获取搜狗 SR
      * @param string $domain
-     * @return mixed|number
+     * @return string|int
      */
-    public static function getBr($domain)
+    public static function getRank($url)
     {
         $http = new HttpProClient();
         $http->setBaseUri('http://rank.ie.sogou.com');
         /** @var HttpResponse $response */
         $response = $http->get("sogourank.php", [
-            'ur' => "http://{$domain}/"
+            'ur' => $url
         ]);
         if ($response->isOk()) {
             return str_replace(['sogourank=', "\r", "\n"], '', $response->getContent());
         } else {
-            return $response->getContent();
+            return 1;
         }
-        return 1;
     }
 }

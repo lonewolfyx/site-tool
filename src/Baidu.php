@@ -155,7 +155,7 @@ class Baidu
      * @param string $appId AppID
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return HttpResponse
+     * @return array|HttpResponse
      */
     public static function DayInclusion($appId, $token, $urls)
     {
@@ -167,7 +167,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['appid' => $appId, 'token' => $token, 'type' => 'batch'],
             'body' => $urls
         ]);
@@ -178,7 +178,7 @@ class Baidu
      * @param string $appid AppID
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return HttpResponse
+     * @return array|HttpResponse
      */
     public static function WeekInclusion($appid, $token, $urls)
     {
@@ -190,7 +190,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', 'urls', [
+        return $client->post('urls', [
             'query' => ['appid' => $appid, 'token' => $token, 'type' => 'batch'],
             'body' => $urls
         ]);
@@ -244,5 +244,31 @@ class Baidu
             return $response->getContent();
         }
         return false;
+    }
+
+    /**
+     * 爱站百度权重
+     * @param string $domain
+     * @return int|string
+     */
+    public static function AZBR($domain)
+    {
+        $url = "https://baidurank.aizhan.com/api/br?domain={$domain}&style=text";
+        $client = new HttpProClient();
+        $client->setHttpOptions([
+            'http_errors' => false,
+        ]);
+        $client->setBaseUri($url);
+        /** @var HttpResponse $response */
+        $response = $client->get('', [], [
+            'Referer' => 'http://' . $domain,
+            'User-Agent' => 'Mozilla/5.0 (compatible; Baiduspider/2.0;+http://www.baidu.com/search/spider.html）'
+        ]);
+        if ($response->isOk()) {
+            if (preg_match('/>(.*)<\/a>/U', $response->getContent(), $match)) {
+                return intval($match [1]);
+            }
+        }
+        return 0;
     }
 }
