@@ -34,8 +34,7 @@ class Shenma
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zhanzhang.sm.cn');
-        return $client->request('push', 'urls', [
-            'query' => ['site' => $site, 'username' => $username, 'resource_name' => 'mip_add', 'token' => $token],
+        return $client->request('post', "/urls?site={$site}&username={$username}&resource_name=mip_add&token={$token}", [
             'body' => $urls
         ]);
     }
@@ -58,8 +57,7 @@ class Shenma
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zhanzhang.sm.cn');
-        return $client->request('push', 'urls', [
-            'query' => ['site' => $site, 'username' => $username, 'resource_name' => 'mip_clean', 'token' => $token],
+        return $client->request('post', "/urls?site={$site}&username={$username}&resource_name=mip_clean&token={$token}", [
             'body' => $urls
         ]);
     }

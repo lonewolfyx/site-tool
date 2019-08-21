@@ -23,7 +23,7 @@ class Baidu
      * @param string $site 网站
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return mixed
+     * @return array
      */
     public static function Push($site, $token, $urls)
     {
@@ -35,8 +35,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('urls', [
-            'query' => ['site' => $site, 'token' => $token],
+        return $client->request('post', "/urls?site={$site}&token={$token}", [
             'body' => $urls
         ]);
     }
@@ -46,7 +45,7 @@ class Baidu
      * @param string $site 网站
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return mixed
+     * @return array
      */
     public static function Update($site, $token, $urls)
     {
@@ -58,8 +57,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('update', [
-            'query' => ['site' => $site, 'token' => $token],
+        return $client->request('post', "/update?site={$site}&token={$token}", [
             'body' => $urls
         ]);
     }
@@ -69,7 +67,7 @@ class Baidu
      * @param string $site 网站
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return mixed
+     * @return array
      */
     public static function Delete($site, $token, $urls)
     {
@@ -81,8 +79,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('del', [
-            'query' => ['site' => $site, 'token' => $token],
+        return $client->request('post', "/del?site={$site}&token={$token}", [
             'body' => $urls
         ]);
     }
@@ -104,8 +101,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('urls', [
-            'query' => ['site' => $site, 'token' => $token, 'type' => 'mip'],
+        return $client->request('post', "/urls?site={$site}&token={$token}&type=mip", [
             'body' => $urls
         ]);
     }
@@ -127,8 +123,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('urls', [
-            'query' => ['site' => $site, 'token' => $token, 'type' => 'amp'],
+        return $client->request('post', "/urls?site={$site}&token={$token}&type=amp", [
             'body' => $urls
         ]);
     }
@@ -155,7 +150,7 @@ class Baidu
      * @param string $appId AppID
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return array|HttpResponse
+     * @return HttpResponse
      */
     public static function DayInclusion($appId, $token, $urls)
     {
@@ -167,20 +162,19 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('urls', [
-            'query' => ['appid' => $appId, 'token' => $token, 'type' => 'batch'],
+        return $client->request('post', "/urls?appid={$appId}&token={$token}&typ=realtime", [
             'body' => $urls
         ]);
     }
 
     /**
      * 周级收录
-     * @param string $appid AppID
+     * @param string $appId AppID
      * @param string $token Token
      * @param string|array $urls Url列表
-     * @return array|HttpResponse
+     * @return HttpResponse
      */
-    public static function WeekInclusion($appid, $token, $urls)
+    public static function WeekInclusion($appId, $token, $urls)
     {
         if (is_array($urls)) {
             $urls = implode("\n", $urls);
@@ -190,8 +184,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->post('urls', [
-            'query' => ['appid' => $appid, 'token' => $token, 'type' => 'batch'],
+        return $client->request('post', "/urls?appid={$appId}&token={$token}&typ=batch", [
             'body' => $urls
         ]);
     }
