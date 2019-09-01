@@ -19,7 +19,7 @@ class Mip
      * @param string $content
      * @return string
      */
-    public static function mipReplace($content = '')
+    public static function replace($content = '')
     {
         $pattern1 = "#<img.*?src=['\"](.*?)['\"].*?>#ims";
         $imgContent = [];
@@ -37,7 +37,7 @@ class Mip
         $content = preg_replace($imgContent, $mipImg, $content);
         $content = preg_replace("/<a /si", "<a target=\"_blank\" ", $content);
         $content = preg_replace("/style=\".*?\"/si", "", $content);
-        return static::mipConvert($content);
+        return static::convert($content);
     }
 
     /**
@@ -45,7 +45,7 @@ class Mip
      * @param string $string
      * @return string
      */
-    public static function mipConvert($string)
+    public static function convert($string)
     {
         $fileType = mb_detect_encoding($string, ['UTF-8', 'GBK', 'LATIN1', 'BIG5']);
         if ($fileType != 'UTF-8') {
