@@ -84,6 +84,29 @@ class Site
     }
 
     /**
+     * 获取SSL 证书主机名
+     * @param string $host
+     * @param int $port
+     * @param int $timeout
+     * @return array|boolean
+     */
+    public static function getSSLHosts($host, $port = 443, $timeout = 60)
+    {
+        $cert = static::getCert($host, $port, $timeout);
+        if ($cert != false) {
+            $subjectAltName = str_replace('DNS:', '', $cert['extensions']['subjectAltName']);
+            $dns = explode(',', $subjectAltName);
+            $hosts = [];
+            foreach ($dns as $host) {
+                $hosts[] = trim($host);
+            }
+            return $hosts;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 获取服务器证书信息
      * @param string $host
      * @param int $port
