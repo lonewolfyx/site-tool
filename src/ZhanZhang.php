@@ -27,7 +27,7 @@ class ZhanZhang
     public static function autoLink($sign, $id)
     {
         $http = new HttpProClient();
-        $http->setBaseUri('http://auto.link.2898.com/index/Autochain/AutoChainYL');
+        $http->setBaseUri('http://auto.link.2898.com');
         /** @var HttpResponse $response */
         $response = $http->get("index/Autochain/AutoChainYL", [
             'sign' => $sign,
