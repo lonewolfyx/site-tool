@@ -25,6 +25,7 @@
         "ext-libxml": "*",
         "ext-intl": "*",
         "ext-ctype": "*",
+        "ext-openssl": "*",
         "larva/supports": "^1.2",
         "jeremykendall/php-domain-parser": "^5.4"
     },
