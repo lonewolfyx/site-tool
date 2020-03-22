@@ -120,7 +120,7 @@ class Site
         stream_context_set_option($context, 'ssl', 'verify_peer_name', false);//不验证主机名是否对应
         stream_context_set_option($context, 'ssl', 'capture_peer_cert', true);//获取证书详情
         try {
-            $resource = stream_socket_client('ssl://' . $host . ':' . $port, $errno, $errStr, 60, STREAM_CLIENT_CONNECT, $context);
+            $resource = stream_socket_client('ssl://' . $host . ':' . $port, $errno, $errStr, $timeout, STREAM_CLIENT_CONNECT, $context);
             $cert = stream_context_get_params($resource);
             return openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
         } catch (\Exception $exception) {
