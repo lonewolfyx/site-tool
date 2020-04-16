@@ -14,34 +14,17 @@ namespace Larva\Site\Tool;
  */
 class Mip
 {
-    /**
-     * MIP内容替换
-     * @param string $content
-     * @return string
-     */
-    public static function replace($content = '')
-    {
-        $pattern1 = "#<img.*?src=['\"](.*?)['\"].*?>#ims";
-        $imgContent = [];
-        preg_match_all($pattern1, $content, $img);
-        $imgContent = $img[0];
-        $imgUrl = $img[1];
-        $mipImg = [];
-        foreach ($imgContent as $key => $val) {
-            $temp = str_replace('<img', 'mip-img', $val);
-            $temp = str_replace('/>', '></mip-img', $temp);
-            $url = $imgUrl[$key];
-            $temp = preg_replace("/src=['\"].*?['\"]/si", "src=\"$url\"", $temp);
-            $mipImg[$key] = $temp;
-        }
-        $content = preg_replace($imgContent, $mipImg, $content);
-        $content = preg_replace("/<a /si", "<a target=\"_blank\" ", $content);
-        $content = preg_replace("/style=\".*?\"/si", "", $content);
-        return static::convert($content);
+    public static function replace( $content ) {
+        $content = self::style( $content );
+        $content = self::img( $content );
+        $content = self::script( $content );
+        $content = self::forbidden( $content );
+        $content = self::convert( $content );
+        return $content;
     }
 
     /**
-     * MIP编码转换
+     * 编码转换
      * @param string $string
      * @return string
      */
@@ -52,5 +35,66 @@ class Mip
             $string = mb_convert_encoding($string, 'utf-8', $fileType);
         }
         return $string;
+    }
+
+    /**
+     * 处理样式表
+     * @param string $content
+     * @return string|null
+     */
+    public static function style( $content ) {
+        preg_match_all( '/ style=\".*?\"/', $content, $style );
+        if ( ! is_null( $style ) ) {
+            foreach ( $style[0] as $index => $value ) {
+                $mip_style = preg_replace( '/ style=\".*?\"/', '', $style[0][ $index ] );
+                $content   = str_replace( $style[0][ $index ], $mip_style, $content );
+            }
+        }
+        $content = preg_replace( "/<(style.*?)>(.*?)<(\/style.*?)>/si", "", $content );
+        $content = preg_replace( "/<(\/?style.*?)>/si", "", $content );
+        return $content;
+    }
+
+    /**
+     * 处理图片
+     * @param string $content
+     * @return string
+     */
+    public static function img( $content ) {
+        preg_match_all( '/<img (.*?)\>/', $content, $images );
+        if ( ! is_null( $images ) ) {
+            foreach ( $images[1] as $index => $value ) {
+                $mip_img = str_replace( '<img', '<mip-img', $images[0][ $index ] );
+                $mip_img = str_replace( '>', '></mip-img>', $mip_img );
+                $mip_img = preg_replace( '/(width|height)="\d*"\s/', '', $mip_img );
+                $mip_img = preg_replace( '/ srcset=\".*?\"/', '', $mip_img );
+                $content = str_replace( $images[0][ $index ], $mip_img, $content );
+            }
+        }
+        return $content;
+    }
+
+    /**
+     * 搞掉JS 脚本
+     * @param string $content
+     * @return string|null
+     */
+    public static function script( $content ) {
+        $content = preg_replace( "/<(script.*?)>(.*?)<(\/script.*?)>/si", "", $content );
+        $content = preg_replace( "/<(\/?script.*?)>/si", "", $content );
+        return $content;
+    }
+
+    /**
+     * 搞掉不支持的标签
+     * @param string $content
+     * @return string|null
+     */
+    public static function forbidden( $content ) {
+        $forbidden_html = array( "frame", "param", "form", "input", "textarea", "select", "option" );
+        for ( $i = 0; $i < sizeof( $forbidden_html ); $i ++ ) {
+            $content = preg_replace( "/<" . $forbidden_html[ $i ] . "[^>]*>(.*?)<\/" . $forbidden_html[ $i ] . ">/is", "", $content );
+        }
+        return $content;
     }
 }
