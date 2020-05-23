@@ -69,7 +69,7 @@ class So
      * @param $sid
      * @return string
      */
-    protected static function token($url, $sid)
+    public static function token($url, $sid)
     {
         $n = array_reverse(str_split($url));
         $r = str_split($sid);
