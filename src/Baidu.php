@@ -86,12 +86,12 @@ class Baidu
 
     /**
      * 快速收录
-     * @param string $appId AppID
+     * @param string $site 网站
      * @param string $token Token
      * @param string|array $urls Url列表
      * @return HttpResponse
      */
-    public static function DailyPush($appId, $token, $urls)
+    public static function DailyPush($site, $token, $urls)
     {
         if (is_array($urls)) {
             $urls = implode("\n", $urls);
@@ -101,7 +101,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', "/urls?site={$appId}&token={$token}&type=daily", [
+        return $client->request('post', "/urls?site={$site}&token={$token}&type=daily", [
             'body' => $urls
         ]);
     }
