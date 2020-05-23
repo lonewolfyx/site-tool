@@ -68,6 +68,21 @@ class Site
     }
 
     /**
+     * 域名是否被微信封锁
+     * @param string $url
+     * @return bool true:可用 false:被封
+     */
+    public static function getWechat($url)
+    {
+        $headers = get_headers('http://mp.weixinbridge.com/mp/wapredirect?url=' . $url, 1);
+        if (isset($headers['Location']) && $headers['Location'] !== $url) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * 获取网站缩略图
      * @param string $url
      * @return array

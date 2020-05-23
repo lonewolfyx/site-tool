@@ -85,74 +85,13 @@ class Baidu
     }
 
     /**
-     * MIP 提交
-     * @param string $site
-     * @param string $token
-     * @param string|array $urls
-     * @return mixed
-     */
-    public static function MIPPush($site, $token, $urls)
-    {
-        if (is_array($urls)) {
-            $urls = implode("\n", $urls);
-        }
-        $client = new HttpClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', "/urls?site={$site}&token={$token}&type=mip", [
-            'body' => $urls
-        ]);
-    }
-
-    /**
-     * AMP 提交
-     * @param string $site
-     * @param string $token
-     * @param string|array $urls
-     * @return mixed
-     */
-    public static function AMPPush($site, $token, $urls)
-    {
-        if (is_array($urls)) {
-            $urls = implode("\n", $urls);
-        }
-        $client = new HttpClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', "/urls?site={$site}&token={$token}&type=amp", [
-            'body' => $urls
-        ]);
-    }
-
-    /**
-     * AMP MIP 清理
-     * @param string $token Token
-     * @param string $url Url
-     * @return mixed
-     */
-    public static function AMPClean($token, $url)
-    {
-        $endpoint = '/update-ping/c/' . urlencode($url);
-        $client = new HttpClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri('http://c.mipcdn.com');
-        return $client->post($endpoint, ['key' => $token]);
-    }
-
-    /**
-     * 天级收录
+     * 快速收录
      * @param string $appId AppID
      * @param string $token Token
      * @param string|array $urls Url列表
      * @return HttpResponse
      */
-    public static function DayInclusion($appId, $token, $urls)
+    public static function DailyPush($appId, $token, $urls)
     {
         if (is_array($urls)) {
             $urls = implode("\n", $urls);
@@ -162,29 +101,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', "/urls?appid={$appId}&token={$token}&typ=realtime", [
-            'body' => $urls
-        ]);
-    }
-
-    /**
-     * 周级收录
-     * @param string $appId AppID
-     * @param string $token Token
-     * @param string|array $urls Url列表
-     * @return HttpResponse
-     */
-    public static function WeekInclusion($appId, $token, $urls)
-    {
-        if (is_array($urls)) {
-            $urls = implode("\n", $urls);
-        }
-        $client = new HttpProClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri('http://data.zz.baidu.com');
-        return $client->request('post', "/urls?appid={$appId}&token={$token}&typ=batch", [
+        return $client->request('post', "/urls?site={$appId}&token={$token}&type=daily", [
             'body' => $urls
         ]);
     }
@@ -265,7 +182,6 @@ class Baidu
         return 0;
     }
 
-
     /**
      * 爱站百度权重
      * @param string $domain
@@ -290,5 +206,29 @@ class Baidu
             }
         }
         return 0;
+    }
+
+    /**
+     * 检查是否收录页面
+     * @param string $url
+     * @return bool
+     */
+    public static function checkInclude($url)
+    {
+        $client = new HttpProClient();
+        $client->setHttpOptions([
+            'http_errors' => false,
+        ]);
+        $client->setBaseUri('https://www.baidu.com');
+        $response = $client->request('get', "/s?wd={$url}", [
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+            ],
+        ]);
+        if (!strpos($response->getContent(), '提交网址')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
