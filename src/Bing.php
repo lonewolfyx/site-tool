@@ -33,6 +33,6 @@ class Bing
             'http_errors' => false,
         ]);
         $client->setBaseUri('https://ssl.bing.com');
-        return $client->postJSON("/webmaster/api.svc/json/SubmitUrlbatch?apikey={$token}",['siteUrl'=>$site,'urlList'=>$urls]);
+        return $client->postJSON("/webmaster/api.svc/json/SubmitUrlbatch?apikey={$token}", ['siteUrl' => $site, 'urlList' => $urls]);
     }
 }
