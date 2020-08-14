@@ -25,14 +25,31 @@ class Bing
      */
     public static function Push($site, $token, $urls)
     {
-        if (!is_array($urls)) {
-            $urls = [$urls];
-        }
         $client = new HttpClient();
         $client->setHttpOptions([
             'http_errors' => false,
         ]);
         $client->setBaseUri('https://ssl.bing.com');
-        return $client->postJSON("/webmaster/api.svc/json/SubmitUrlbatch?apikey={$token}", ['siteUrl' => $site, 'urlList' => $urls]);
+        if (is_array($urls)) {
+            return $client->postJSON("/webmaster/api.svc/json/SubmitUrlbatch?apikey={$token}", ['siteUrl' => $site, 'urlList' => $urls]);
+        } else {
+            return $client->postJSON("/webmaster/api.svc/json/SubmitUrl?apikey={$token}", ['siteUrl' => $site, 'url' => $urls]);
+        }
+    }
+
+    /**
+     * 获取剩余配额
+     * @param string $site
+     * @param string $token
+     * @return array
+     */
+    public static function GetUrlSubmissionQuota($site, $token)
+    {
+        $client = new HttpClient();
+        $client->setHttpOptions([
+            'http_errors' => false,
+        ]);
+        $client->setBaseUri('https://ssl.bing.com');
+        return $client->get("/webmaster/api.svc/json/GetUrlSubmissionQuota", ['siteUrl' => $site, 'apikey' => $token]);
     }
 }
