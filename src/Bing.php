@@ -26,6 +26,7 @@ class Bing
     public static function Push($site, $token, $urls)
     {
         $client = new HttpClient();
+        $client->timeout = 10.0;
         $client->setHttpOptions([
             'http_errors' => false,
         ]);
@@ -46,6 +47,7 @@ class Bing
     public static function GetUrlSubmissionQuota($site, $token)
     {
         $client = new HttpClient();
+        $client->timeout = 10.0;
         $client->setHttpOptions([
             'http_errors' => false,
         ]);
