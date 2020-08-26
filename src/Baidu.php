@@ -96,7 +96,7 @@ class Baidu
         if (is_array($urls)) {
             $urls = implode("\n", $urls);
         }
-        $client = new HttpProClient();
+        $client = new HttpClient();
         $client->setHttpOptions([
             'http_errors' => false,
         ]);
