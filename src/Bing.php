@@ -27,6 +27,7 @@ class Bing
     {
         $client = new HttpClient();
         $client->timeout = 10.0;
+        $client->connectTimeout = 10.0;
         $client->setHttpOptions([
             'http_errors' => false,
         ]);
@@ -48,6 +49,7 @@ class Bing
     {
         $client = new HttpClient();
         $client->timeout = 10.0;
+        $client->connectTimeout = 10.0;
         $client->setHttpOptions([
             'http_errors' => false,
         ]);
