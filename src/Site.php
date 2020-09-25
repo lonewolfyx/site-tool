@@ -126,6 +126,22 @@ class Site
     }
 
     /**
+     * 获取SSL使用者信息
+     * @param string $host
+     * @param int $port
+     * @param int $timeout
+     * @return false|string
+     */
+    public static function getSSLSubject($host, $port = 443, $timeout = 60)
+    {
+        $cert = static::getCert($host, $port, $timeout);
+        if ($cert != false && isset($cert['subject']['CN'])) {
+            return $cert['subject']['CN'];
+        }
+        return false;
+    }
+
+    /**
      * 获取服务器证书信息
      * @param string $host
      * @param int $port
