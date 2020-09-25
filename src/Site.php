@@ -109,13 +109,17 @@ class Site
     {
         $cert = static::getCert($host, $port, $timeout);
         if ($cert != false) {
-            $subjectAltName = str_replace('DNS:', '', $cert['extensions']['subjectAltName']);
-            $dns = explode(',', $subjectAltName);
-            $hosts = [];
-            foreach ($dns as $host) {
-                $hosts[] = trim($host);
+            if (isset($cert['extensions']['subjectAltName'])) {
+                $subjectAltName = str_replace('DNS:', '', $cert['extensions']['subjectAltName']);
+                $dns = explode(',', $subjectAltName);
+                $hosts = [];
+                foreach ($dns as $host) {
+                    $hosts[] = trim($host);
+                }
+                return $hosts;
+            } else {
+                return ['localhost'];
             }
-            return $hosts;
         } else {
             return false;
         }
