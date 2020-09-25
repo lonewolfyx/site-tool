@@ -117,12 +117,11 @@ class Site
                     $hosts[] = trim($host);
                 }
                 return $hosts;
-            } else {
-                return ['localhost'];
+            } else if (isset($cert['subject']['CN'])) {
+                return [$cert['subject']['CN']];
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
