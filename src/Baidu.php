@@ -157,6 +157,29 @@ class Baidu
     }
 
     /**
+     * 获取爱站百度-网站权重
+     * @param string $key
+     * @param string|array $domains
+     * @return array
+     */
+    public static function azRank($key, $domains)
+    {
+        $client = new HttpProClient();
+        $client->setHttpOptions([
+            'http_errors' => false,
+        ]);
+        $client->setBaseUri('https://apistore.aizhan.com');
+        if (is_array($domains)) {
+            $domains = implode('|', $domains);
+        }
+        /** @var HttpResponse $response */
+        $response = $client->post("/baidurank/siteinfos/" . $key, [
+            'domains' => $domains
+        ]);
+        return $response->getData();
+    }
+
+    /**
      * 爱站百度权重
      * @param string $domain
      * @return int|string
