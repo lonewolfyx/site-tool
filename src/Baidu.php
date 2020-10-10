@@ -157,81 +157,6 @@ class Baidu
     }
 
     /**
-     * 获取爱站百度-网站权重
-     * @param string $key
-     * @param string|array $domains
-     * @return array
-     */
-    public static function azRank($key, $domains)
-    {
-        $client = new HttpProClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri('https://apistore.aizhan.com');
-        if (is_array($domains)) {
-            $domains = implode('|', $domains);
-        }
-        /** @var HttpResponse $response */
-        $response = $client->post("/baidurank/siteinfos/" . $key, [
-            'domains' => $domains
-        ]);
-        return $response->getData();
-    }
-
-    /**
-     * 爱站百度权重
-     * @param string $domain
-     * @return int|string
-     */
-    public static function AZBR($domain)
-    {
-        $url = "https://baidurank.aizhan.com/api/br?domain={$domain}&style=text";
-        $client = new HttpProClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri($url);
-        /** @var HttpResponse $response */
-        $response = $client->get('', [], [
-            'Referer' => 'http://' . $domain,
-            'User-Agent' => 'Mozilla/5.0 (compatible; Baiduspider/2.0;+http://www.baidu.com/search/spider.html）'
-        ]);
-        if ($response->isOk()) {
-            if (preg_match('/>(.*)<\/a>/U', $response->getContent(), $match)) {
-                return intval($match [1]);
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * 爱站百度权重
-     * @param string $domain
-     * @return int|string
-     */
-    public static function AZMBR($domain)
-    {
-        $url = "https://baidurank.aizhan.com/api/mbr?domain={$domain}&style=text";
-        $client = new HttpProClient();
-        $client->setHttpOptions([
-            'http_errors' => false,
-        ]);
-        $client->setBaseUri($url);
-        /** @var HttpResponse $response */
-        $response = $client->get('', [], [
-            'Referer' => 'http://' . $domain,
-            'User-Agent' => 'Mozilla/5.0 (compatible; Baiduspider/2.0;+http://www.baidu.com/search/spider.html）'
-        ]);
-        if ($response->isOk()) {
-            if (preg_match('/>(.*)<\/a>/U', $response->getContent(), $match)) {
-                return intval($match [1]);
-            }
-        }
-        return 0;
-    }
-
-    /**
      * 检查是否收录页面
      * @param string $url
      * @return bool
@@ -243,7 +168,7 @@ class Baidu
             'http_errors' => false,
         ]);
         $client->setBaseUri('https://www.baidu.com');
-        $response = $client->request('get', "/s?wd={$url}", [
+        $response = $client->get("/s?wd={$url}", [
             'headers' => [
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
             ],

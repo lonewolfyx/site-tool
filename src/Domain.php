@@ -87,7 +87,7 @@ class Domain
      * @param string $domain
      * @return array
      */
-    public static function Whois($domain)
+    public static function whois($domain)
     {
         $command = '/usr/bin/whois -H {domain}';
         $cmd = strtr($command, [
