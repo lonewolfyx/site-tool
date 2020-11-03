@@ -60,4 +60,31 @@ class Sogou
             return false;
         }
     }
+
+    /**
+     * 获取推荐搜索
+     * @param string $word
+     * @return array|false
+     */
+    public static function suggestion($word)
+    {
+        $http = new HttpProClient();
+        $http->setBaseUri('http://w.sugg.sogou.com');
+        /** @var HttpResponse $response */
+        $response = $http->get("sugg/ajaj_json.jsp", [
+            'key' => $word,
+            'type' => 'web'
+        ], [
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+            ],
+        ]);
+        if ($response->isOk()) {
+            $content = str_replace(['window.sogou.sug(', ",-1);"], '', mb_convert_encoding($response->getContent(), "UTF-8", "GB2312"));
+            $arr = json_decode($content, true);
+            return $arr[1];
+        } else {
+            return false;
+        }
+    }
 }

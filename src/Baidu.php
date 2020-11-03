@@ -179,4 +179,46 @@ class Baidu
             return false;
         }
     }
+
+    /**
+     * 获取推荐搜索
+     * @param string $word
+     * @return array|false
+     */
+    public static function suggestion($word)
+    {
+        $http = new HttpProClient();
+        $http->setBaseUri('http://suggestion.baidu.com/');
+        /** @var HttpResponse $response */
+        $response = $http->get("su", [
+            'wd' => $word,
+            //'p' => '1',
+            'cb' => 'window.bdsug.sug'
+        ], [
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+            ],
+        ]);
+        if ($response->isOk()) {
+            $content = str_replace(['window.bdsug.sug(', ');'], '', mb_convert_encoding($response->getContent(), "UTF-8", "GB2312"));
+            $arr = static::ext_json_decode($content,true);
+            return $arr['s'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 兼容key没有双引括起来的JSON字符串解析
+     * @param string $json JSON字符串
+     * @param boolean $assoc true:Array,false:Object
+     * @return array/object
+     */
+    private static function ext_json_decode($json, $assoc = true)
+    {
+        if (preg_match('/\w:/', $json)) {
+            $json = preg_replace('/(\w+):/is', '"$1":', $json);
+        }
+        return json_decode($json, $assoc);
+    }
 }

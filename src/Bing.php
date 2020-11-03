@@ -9,6 +9,8 @@
 namespace Larva\Site\Tool;
 
 use Larva\Supports\HttpClient;
+use Larva\Supports\HttpProClient;
+use Larva\Supports\HttpResponse;
 
 /**
  * Class Bing
@@ -55,5 +57,37 @@ class Bing
         ]);
         $client->setBaseUri('https://ssl.bing.com');
         return $client->get("/webmaster/api.svc/json/GetUrlSubmissionQuota", ['siteUrl' => $site, 'apikey' => $token]);
+    }
+
+    /**
+     * 获取推荐搜索
+     * @param string $word
+     * @return array|false
+     */
+    public static function suggestion($word)
+    {
+        $http = new HttpProClient();
+        $http->setBaseUri('https://sg1.api.bing.com/');
+        /** @var HttpResponse $response */
+        $response = $http->get("qsonhs.aspx", [
+            'q' => $word,
+            'type' => 'json',
+        ], [
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+            ],
+        ]);
+        if ($response->isOk()) {
+            $ret = [];
+            $arr = json_decode($response->getContent(), true);
+            if (isset($arr['AS']['Results'][0]['Suggests'])) {
+                foreach ($arr['AS']['Results'][0]['Suggests'] as $result) {
+                    $ret[] = $result['Txt'];
+                }
+            }
+            return $ret;
+        } else {
+            return false;
+        }
     }
 }

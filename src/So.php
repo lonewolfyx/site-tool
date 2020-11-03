@@ -9,6 +9,7 @@ namespace Larva\Site\Tool;
 
 use Larva\Supports\HttpClient;
 use Larva\Supports\HttpProClient;
+use Larva\Supports\HttpResponse;
 
 /**
  * 360 搜索自动推送
@@ -78,5 +79,34 @@ class So
             $i[] = $r[$s] . ($n[$s] ?? "");
         }
         return implode('', $i);
+    }
+
+    /**
+     * 获取推荐搜索
+     * @param string $word
+     * @return array|false
+     */
+    public static function suggestion($word)
+    {
+        $http = new HttpProClient();
+        $http->setBaseUri('https://sug.so.360.cn/');
+        /** @var HttpResponse $response */
+        $response = $http->get("suggest", [
+            'word' => $word,
+        ], [
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+            ],
+        ]);
+        if ($response->isOk()) {
+            $words = json_decode($response->getContent(),true);
+            $ret = [];
+            foreach ($words['result'] as $word) {
+                $ret[] = $word['word'];
+            }
+            return $ret;
+        } else {
+            return false;
+        }
     }
 }
